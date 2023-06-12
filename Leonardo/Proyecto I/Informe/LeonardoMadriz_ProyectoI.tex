@@ -1,0 +1,50 @@
+\documentclass[a4paper]{article} %Formato de plantilla a utilizar
+\usepackage[utf8]{inputenc}  %paquete para trabajar en español
+\usepackage[spanish]{babel} %Paquete para trabajar en español
+\usepackage{graphicx} %Para insertar imagenes
+\usepackage[left=2.54cm, right=2.54cm, top=2.54cm,bottom=2.54cm]{geometry} %Margenes
+\usepackage{fancyhdr} %Define el estilo de la página y cabecera
+\usepackage{parskip} %Arreglo de la tabulacion
+\usepackage{amsmath}
+
+%Declaración de variables
+\newcommand{\logouni}{Imagenes/Logo.png}
+\newcommand{\startDate}{26 de Mayo del 2003}
+
+%Cabecera
+\pagestyle{fancy}
+\setlength{\headheight}{50.2pt}
+\fancyhf{}
+\chead{\includegraphics[width=2cm]{\logouni}}
+\lhead{CT-1212 Int. Ingeniería eléctrica\\ Prof. Luis Andrade}
+\rhead{Tarea 2\\ Semana 6}
+
+%Comienzo del documento
+\begin{document}
+
+% Inicio de la portada
+	\begin{titlepage}
+	%parte superior
+		\centering
+		\includegraphics[width=0.2\textwidth]{\logouni}\par\vspace{0.2cm}
+		{\scshape\LARGE Universidad Simón Bolívar}\vspace{0.2cm}\\
+		{\scshape \large Departamento De Conversión y Transporte de Energía}\vspace{0.2cm}\\
+		{\large CT-1212 Introducción a la Ingeniería Eléctrica}\par
+		\vfill
+	%Titulo del trabajo
+		\centering
+		\rule{\linewidth}{0.75mm}
+		{\scshape \LARGE Proyecto I:\par \vspace{0.2cm} Dimensionamiento de sistema de ascensor}
+		\rule{\linewidth}{0.75mm}
+		\vfill
+	% nombre del estudiante
+
+		\begin{center}
+			{\large \textbf{Estudiante:}\\Leonardo Madriz\\ Carnet:  20-10399}
+		\end{center}
+		\vfill
+	%fecha
+	{\huge\startDate \par}
+	\end{titlepage}
+% Final de la portada
+\end{document}

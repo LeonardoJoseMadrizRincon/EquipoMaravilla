@@ -1,0 +1,12 @@
+Para comenzar nuestro análisis en función al tráfico vertical y tomar en cuenta la menor y la más optima cantidad de ascensores
+que garantice el servivio y el cumplimiento de las normativas pautadas en las reglas covenin, se realizó principalmente una división de los 85
+isos en dos grupos
+
+    Grupo A ---> Se encargará de tomar los pisos principales, sin que tenga zona expresas, 
+			El número de pisos que este tomará son las siguientes:
+			    
+			    - Planta principal
+			    - pisos del 1 al 20
+			    - 3 sótanos
+
+    Grupo B
