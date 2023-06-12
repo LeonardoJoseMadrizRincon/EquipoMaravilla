@@ -1,52 +1,40 @@
 import math
 import pandas
-import numpy as np
 
-#Archivo excel a trabajar
+#Lectura de Archivo excel a trabajar
 filePath = "./valores_ascensor.xlsm"
 df = pandas.read_excel("valores_ascensor.xls")
-print(df)
 
-def calculus(n):
+# Esta función se encarga de realizar los calculos expuesta en el reglamento covenin 621 -3
+def calculus(n): 
 # Variables de entradas a tantear
-    z= float(df.iloc[n,1])  #Excel
-    print("z: ",z)
-    p= float(df.iloc[n,2])  #Excel
-    print("p: ",p)
-    vn= float(df.iloc[n,3]) #Excel
-    print("vn: ",vn)
-    
+    z= float(df.iloc[n,1])  #Número de ascensores-->Excel       
+    p= float(df.iloc[n,2])  #Capacidad nominal-->Excel
+    vn= float(df.iloc[n,3]) #Velocidad nominal-->Excel
+
+
 # Cuentas obtenidas de los datos de cada grupo de ascensores
-    na = float(df.iloc[n,9])
-    ne = float(df.iloc[n,4])    #Excel
-    ep = 3.5
-    ns = na - ne
-    print("ns: ",ns)
-    print("ne: ",ne)
-    B = ns*35 + 15*3
-    phi = 1
+    na = float(df.iloc[n,9])    #Pisos totales encima de la plataforma princial-->Excel
+    ne = float(df.iloc[n,4])    #Pisos no atendidos-->Excel
+    ep = 3.5                    #Altura entre pisos
+    ns = na - ne                #Pisos recorridos
+    B = ns*35 + 3*15            #Poblacion total
+    phi = 1                     #Aceleración
+
 
 #Valores pre-definidos por las reglas covenin, segun tablas
-    pv = float(df.iloc[n,5])    #Excel
-    print("pv: ",pv)
-    np = float(df.iloc[n,6])    #Excel
-    print("np: ",np)
-    t1 = float(df.iloc[n,7])    #Excel
-    print("t1: ",t1)
-    t2 = float(df.iloc[n,8])
-    print("t2: ",t2)
-
+    pv = float(df.iloc[n,5])    #Personas por viaje-->Excel/Tabla 5
+    np = float(df.iloc[n,6])    #Número de paradas-->Excel/Tabla 3
+    t1 = float(df.iloc[n,7])    #Tiempo -->Excel/Tabla 7
+    t2 = float(df.iloc[n,8])    #Excel/Tabla 8
 
 
 #Calculo de otras variables
     ha = na * ep #Recorrido superior total
-    print("ha: ",ha)
     he = round(ne* ep,4) # recorrido expreso
-    print("he: ",he)
     hs = round(ha - he,4) # Recorrido sobre la planta principal con servicios de ascensores
-    print("hs: ",hs)
     check = round(float(math.sqrt(hs*(phi)/np)),4)
-    print(check)
+
 
 # Calculo de los tiempos de un viaje completo
     if (check >= vn) and (df.iloc[n,0] != "Grupo A"):
@@ -54,38 +42,63 @@ def calculus(n):
 
     elif (check < vn) and (df.iloc[n,0] != "Grupo A"):
         tvc =2*(ha/vn)-hs/vn+2*(vn/phi)+(2*hs/(np*check))*(np-1) + t1*(np+1) + t2*pv
-        print("TVC: ",tvc)
-
+ 
     elif (check >= vn) and (df.iloc[n,0] == "Grupo A"):
         tvc = 2*ha/vn + (vn/phi + t1)*(np + 1) + t2*pv
-        print("TVC: ",tvc)
 
     elif (check <= vn) and (df.iloc[n,0] == "Grupo A"):
-        print("This")
         tvc = 2*ha/check+vn/phi+ha/vn+t1*(np+1)+t2*pv
-    
-
+     
     else:
         print("Hay algo raro con la velocidad nominal")
 
     ta = (1/10)*tvc #Tiempo adicional
-    print("ta: ",ta)
     ttv = tvc + ta #Tiempo de un circuito completo
-    print("ttv: ",ttv)
     i = ttv/z
     c = (300*pv*(z*100))/(ttv*816)
-
-#verificacion
     return (c,i)
+
+
+def report(c,i,grupo,w):
+    with open('./report_result.txt',w,encoding="utf8") as f:
+        if (c < 12) or (i>40):
+            f.write(f"{grupo}:\n")
+            f.write(f"\t c = {c} %\n")
+            f.write(f"\t i = {i} sg\n")
+            f.write(f"\tLos resultados no son admitibles\n\n")
+
+        elif (c>12) or (i<49):
+            f.write(f"{grupo}:\n")
+            f.write(f"\t c = {c} %\n")
+            f.write(f"\t i = {i} sg\n")
+            f.write(f"\tLos resultados cumplen con los requisitos del tráfico vertical\n\n")
+
+        elif (c<12) or (i<49):
+            f.write(f"{grupo}:\n")
+            f.write(f"\t c = {c} %\n")
+            f.write(f"\t i = {i} sg\n")
+            f.write(f"\tEl valor de la capacidad de transporte no se encuentra en norma\n\n")
+
+        elif (c>12) or (i>49):
+            f.write("grupo:\n")
+            f.write(f"\t c = {c} %\n")
+            f.write(f"\t i = {i} sg\n")
+            f.write(f"\tEl valor del intervalo probable no se encuentra en norma\n\n")
 
 
 def run():
     c1, i1 = calculus(0)
-    print(c1)
-    print(i1)
-    #c2, i2 = calculus(1)
-    #c3, i3 = calculus(2)
-    #c4, i4 = calculus(3)
+    report(c1,i1,str(df.iloc[0,0]),"w")
+
+
+    c2, i2 = calculus(1)
+    report(c2,i2,str(df.iloc[1,0]),"a")
+
+
+    c3, i3 = calculus(2)
+    report(c3,i3,str(df.iloc[2,0]),"a")
+
+    print("El programa ha finalizado con éxitos!")
 
 if __name__ == "__main__":
     run()
